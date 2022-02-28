@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PostController {
 
+    @GetMapping("/imgtest")
+    public String imgTest() {
+        return "imgTest";
+
+    }
+
     @GetMapping("/writeForm")
     public String writeForm() {
         return "writeForm"; // 리턴해주는 파일의 위치는 무조건 templates에서 해줌. => templates에 있는 writeForm파일을 return
