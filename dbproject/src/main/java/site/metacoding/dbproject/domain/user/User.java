@@ -4,12 +4,18 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+
 import lombok.NoArgsConstructor;
 
 // JPA 라이브러리는 Java Persistence(DB에 영구적인 저장) API(노출되어 있는 메서드)
@@ -19,8 +25,9 @@ import lombok.NoArgsConstructor;
 // 3. ORM 제공!! - 이 부분 지금 몰라도 됨. (Object Relaction)
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data // Getter, Setter, ToString
 @Entity // 서버 실행시 해당 클래스로 테이블을 생성해!!
+@EntityListeners(AuditingEntityListener.class) // 현재시간 입력을 위해 필요한 어노테이션
 public class User {
     // IDENTITY 전략은 DB에게 번호증가 정략을 위힘하는 것!! - 알아서 DB에 맞게 찾아줌
     @Id // Primary Key 지정
@@ -33,6 +40,9 @@ public class User {
     private String password;
     @Column(length = 16000000) // 1600만 byte => 자동으로 longtext로 전환
     private String email;
+    @CreatedDate // insert
     private LocalDateTime createDate; // Java에서는 LocalDateTime이 있는데 DB에서 자동으로 datetime으로 자동 전환!!
     // 근데 단점은 자동으로 커멜표기법은 언더스크롤로 바뀜. => 설정파일에서 바꾸기 가능.
+    @LastModifiedDate // insert, update
+    private LocalDateTime updateDate;
 }
