@@ -126,6 +126,7 @@ public class UserController {
     // 로그아웃 - 로그인 O
     @GetMapping("/logout")
     public String logout() {
-        return "메인페이지를 돌려주면 됨"; // PostController 만들고 수정하자.
+        session.invalidate(); // 세션의 모든영역을 날림.
+        return "redirect:/loginForm"; // PostController 만들고 수정하자.
     }
 }
