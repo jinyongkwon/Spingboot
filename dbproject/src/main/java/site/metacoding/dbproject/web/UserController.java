@@ -37,8 +37,16 @@ public class UserController {
     // username=ssar&password=1234&email=ssar@nate.com (x-www-form-urlencoded)
     // 회원가입 - 로그인 X
     @PostMapping("/join")
-    public String join(User user) {
-        System.out.println("user : " + user);
+    public String join(User user) { // 기본기를 위해 먼저 잡아보고 후에 try-catch로 잡는다.
+        // 1.1 null체크
+        if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+            return "redirect:/joinForm"; // 새로고침 되기 때문에 최악 => 뒤로가기 해주면 해결
+        }
+        // 1.2 공백체크
+        if (user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("")) {
+            return "redirect:/joinForm";
+        }
+        // 2. 핵심로직
         User userentity = userRepository.save(user);
         System.out.println("userentity : " + userentity);
         // redirect : 매핑주소
@@ -77,6 +85,8 @@ public class UserController {
     // 유저상세 페이지 (동적) - 로그인 O
     @GetMapping("/user/{id}")
     public String detail(@PathVariable Integer id, Model model) {
+
+        // 유효성 검사하기 (엄청나게 많음.)
         User principal = (User) session.getAttribute("principal");
 
         // 1. 인증 체크
@@ -97,7 +107,7 @@ public class UserController {
             model.addAttribute("user", userEntity);
             return "user/detail";
         } else {
-            return "error/page1";
+            return "error/page1"; // DB를 억지로 날리지 않는이상 여기로 올수가없음.
         }
     }
 

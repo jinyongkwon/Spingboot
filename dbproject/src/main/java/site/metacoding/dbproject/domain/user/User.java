@@ -38,7 +38,7 @@ public class User {
     private String username; // ssar 아이디
     @Column(length = 12, nullable = false) // 길이 12, not null
     private String password;
-    @Column(length = 16000000) // 1600만 byte => 자동으로 longtext로 전환
+    @Column(length = 16000000, nullable = false) // 1600만 byte => 자동으로 longtext로 전환
     private String email;
     @CreatedDate // insert
     private LocalDateTime createDate; // Java에서는 LocalDateTime이 있는데 DB에서 자동으로 datetime으로 자동 전환!!
