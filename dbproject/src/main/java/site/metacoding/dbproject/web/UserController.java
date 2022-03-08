@@ -89,8 +89,10 @@ public class UserController {
             System.out.println("로그인 되었습니다.");
             session.setAttribute("principal", userEntity); // session에 user의 정보를 기록!!
 
-            if (user.getRemember() != null && user.getRemember().equals("on")) {
-                response.addHeader("Set-Cookie", "remember=" + user.getUsername());
+            if (user.getRemember() != null) {
+                if (user.getRemember().equals("on")) {
+                    response.addHeader("Set-Cookie", "remember=" + userEntity.getUsername());
+                }
             }
         }
 
