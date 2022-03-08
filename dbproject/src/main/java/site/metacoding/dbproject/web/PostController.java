@@ -1,8 +1,11 @@
 package site.metacoding.dbproject.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +37,11 @@ public class PostController {
     // GET 글목록 페이지 /post/list, /
     // @GetMapping({"/", "/post/list"})
     @GetMapping({ "/", "/post/list" })
-    public String list() {
+    public String list(Model model) {
+        // 1. postRepository의 findAll() 호출
+        List<Post> posts = postRepository.findAll();
+        // 2. model에 담기
+        model.addAttribute("posts", posts);
         return "post/list";
     }
 
