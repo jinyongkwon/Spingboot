@@ -8,6 +8,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -45,4 +46,9 @@ public class User {
     // 근데 단점은 자동으로 커멜표기법은 언더스크롤로 바뀜. => 설정파일에서 바꾸기 가능.
     @LastModifiedDate // insert, update
     private LocalDateTime updateDate;
+
+    ///////////////////////////////////////////////// DB테이블과 상관없음
+    @Transient // DB에 칼럼 만들지마라는 어노테이션
+    private String remember;
+
 }

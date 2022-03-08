@@ -2,7 +2,9 @@ package site.metacoding.dbproject.web;
 
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -55,7 +57,17 @@ public class UserController {
 
     // 로그인 페이지 (정적) - 로그인 X
     @GetMapping("/loginForm")
-    public String loginForm() {
+    public String loginForm(HttpServletRequest request, Model model) {
+        // JSESSIONID=asidaisdjasdi1233;remember=ssar
+        // request.getHeader("Cookie");
+        if (request.getCookies() != null) {
+            Cookie[] cookies = request.getCookies(); // JSESSIONID,remember 2개가 있음. 내부적으로 split해준것.
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("remember")) {
+                    model.addAttribute("remember", cookie.getValue());
+                }
+            }
+        }
         return "user/loginForm";
     }
 
@@ -65,8 +77,8 @@ public class UserController {
     // 이유 : 주소에 패스워드를 남길 수 없으니까!! => 보안을 위해 POST를 사용!!
     // 로그인 - 로그인 X
     @PostMapping("/login")
-    public String login(HttpServletRequest request, User user) {
-        session = request.getSession(); // 자기 번호의 세션 영역에 접근
+    public String login(User user, HttpServletResponse response) {
+
         // 1. DB연결해서 username, password 있는지 확인
         User userEntity = userRepository.mLogin(user.getUsername(), user.getPassword());
 
@@ -76,6 +88,10 @@ public class UserController {
         } else {
             System.out.println("로그인 되었습니다.");
             session.setAttribute("principal", userEntity); // session에 user의 정보를 기록!!
+
+            if (user.getRemember() != null && user.getRemember().equals("on")) {
+                response.addHeader("Set-Cookie", "remember=" + user.getUsername());
+            }
         }
 
         return "redirect:/"; // PostController 만들고 수정하자.
@@ -95,7 +111,7 @@ public class UserController {
         }
 
         // 2. 권한체크
-        if (principal.getId() != id) { // session에서 가져온 User의 id와 주소의 id를 비교!!
+        if (principal.getId() != id) {
             return "error/page1";
         }
 
