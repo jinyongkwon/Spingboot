@@ -43,6 +43,7 @@ public class PostController {
         List<Post> posts = postRepository.findAll();
         // 2. model에 담기
         model.addAttribute("posts", posts);
+        // model.addAttribute("posts", postRepository.findAll()); // 이렇게 바로넣어도 사용가능
         return "post/list";
     }
 
